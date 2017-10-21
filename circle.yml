@@ -16,11 +16,14 @@ jobs:
           name: Deploy
           command: |
             if [ "${CIRCLE_BRANCH}" == "${DEPLOY_BRANCH}" ]; then
-            echo "
-              cd '$DEPLOY_DIR' && \
-              git pull origin '${DEPLOY_BRANCH}' && \
-              touch deploy.sh && sh deploy.sh
-            " > script.sh
+              apk update
+              apk add openssh
+
+              echo "
+                cd '$DEPLOY_DIR' && \
+                git pull origin '${DEPLOY_BRANCH}' && \
+                touch deploy.sh && sh deploy.sh
+              " > script.sh
 
               IP_LIST=$(echo $IPS | tr "," "\n")
               for ip in $IP_LIST
