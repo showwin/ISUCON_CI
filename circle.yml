@@ -2,6 +2,8 @@ version: 2
 
 jobs:
   build:
+    docker:
+      - image: debian:stretch
     working_directory: /root
 
     steps:
