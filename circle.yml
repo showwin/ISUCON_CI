@@ -1,0 +1,29 @@
+version: 2
+
+jobs:
+  build:
+    working_directory: /root
+
+    steps:
+      - checkout
+      - run:
+          name: Setup SSH Key
+          command: |
+            echo $SSH_KEY > ~/.ssh/deploy.Key
+            chmod 400 ~/.ssh/deploy.key
+      - deploy:
+          name: Deploy
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "${DEPLOY_BRANCH}" ]; then
+              IP_LIST=$(echo $IPS | tr "," "\n")
+              for ip in $IP_LIST
+              do
+                echo "Deploy to ${ip}"
+                ssh -i ~/.ssh/deploy.key $SSH_USER@$ip && \
+                  cd $DEPLOY_DIR && \
+                  git pull origin ${DEPLOY_BRANCH} && \
+                  touch deploy.sh && sh deploy.sh
+              done
+            else
+              echo "NOT deploy to ${DEPLOY_BRANCH}"
+            fi
