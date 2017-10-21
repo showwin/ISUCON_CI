@@ -10,7 +10,7 @@ jobs:
       - run:
           name: Setup SSH Key
           command: |
-            echo $SSH_KEY > ~/.ssh/deploy.Key
+            mkdir ~/.ssh/ && echo $SSH_KEY > ~/.ssh/deploy.Key
             chmod 400 ~/.ssh/deploy.key
       - deploy:
           name: Deploy
